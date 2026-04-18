@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+    font-feature-settings: "liga" 1, "calt" 1;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  p, li {
+    @apply leading-relaxed;
+  }
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Base document ──────────────────────────────────────────────────────── */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  color: #2B2B2B;
+  background-color: #FFFFFF;
+}
+
+/* ─── Media defaults ─────────────────────────────────────────────────────── */
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ─── Focus styles ───────────────────────────────────────────────────────── */
+/* Remove default outline; Tailwind focus-visible utilities handle this */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #0E5A36;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ─── Prefers-reduced-motion ─────────────────────────────────────────────── */
+/*
+ * CSS-layer fallback for browsers that don't support the JS
+ * useReducedMotion() hook, or for non-Framer-Motion transitions.
+ * Framer Motion's JS animations are handled separately via useAnimations().
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Skip link (accessibility) ──────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: #0E5A36;
+  color: #fff;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.875rem;
+  border-radius: 0 0 6px 6px;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}

@@ -1,0 +1,145 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   CEOVIA — Base Styles
+   src/index.css
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── FONT IMPORTS ─────────────────────────────────────────────────────────── */
+/* Playfair Display: luxury serif — hero headlines, section titles             */
+/* Inter: clean modern sans — body copy, UI, buttons, nav, labels             */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── TAILWIND DIRECTIVES ──────────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS CUSTOM PROPERTIES ───────────────────────────────────────────────── */
+:root {
+  /* ── Brand Colours */
+  --himalayan-green: #2D6A4F;
+  --deep-green:      #1c2b1a;
+  --omega-amber:     #D4860A;
+  --clinical-white:  #F8F4EF;
+  --bronze:          #8B6914;
+  --text-dark:       #1A1A1A;
+  --text-muted:      #6B7280;
+
+  /* ── Green scale */
+  --color-green-50:  #EAF2ED;
+  --color-green-100: #C9E2D2;
+  --color-green-500: #2D6A4F;
+  --color-green-600: #245B42;
+  --color-green-700: #1A4531;
+  --color-green-800: #112D1F;
+  --color-green-900: #1c2b1a;
+
+  /* ── Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans:    'Inter', system-ui, sans-serif;
+
+  /* ── Type scale */
+  --text-display-2xl: 4.5rem;   /* 72px */
+  --text-display-xl:  3.5rem;   /* 56px */
+  --text-display-lg:  2.5rem;   /* 40px */
+  --text-display-md:  2rem;
+  --text-display-sm:  1.5rem;
+  --text-body-xl:     1.125rem; /* 18px */
+  --text-body-lg:     1rem;     /* 16px */
+  --text-body-md:     0.875rem; /* 14px */
+  --text-label:       0.6875rem;/* 11px */
+  --label-tracking:   0.15em;
+
+  /* ── Spacing */
+  --section-padding:  7.5rem;   /* 120px */
+  --content-max:      1200px;
+
+  /* ── Motion */
+  --ease-out:    cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Shadows */
+  --shadow-cta:       0 4px 14px 0 rgba(45,106,79,0.35);
+  --shadow-cta-hover: 0 6px 20px 0 rgba(45,106,79,0.45);
+  --shadow-focus:     0 0 0 3px rgba(45,106,79,0.20);
+}
+
+/* ── BASE LAYER ──────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body-lg);
+    line-height: 1.7;
+    color: var(--text-dark);
+    background-color: var(--clinical-white);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Headings — Playfair Display */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+    margin: 0;
+  }
+
+  h1 { font-size: var(--text-display-2xl); }
+  h2 { font-size: var(--text-display-xl);  }
+  h3 { font-size: var(--text-display-lg);  }
+  h4 { font-size: var(--text-display-md);  }
+  h5 { font-size: var(--text-display-sm);  }
+
+  p {
+    margin: 0 0 1.25em;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: var(--himalayan-green);
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  a:hover {
+    color: #245B42;
+  }
+
+  img, video, svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--himalayan-green);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: rgba(45, 106, 79, 0.15);
+    color: #1A4531;
+  }
+}
+
+/* ── SCROLLBAR ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar               { width: 5px; height: 5px; }
+::-webkit-scrollbar-track         { background: var(--clinical-white); }
+::-webkit-scrollbar-thumb         { background: #C9E2D2; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover   { background: #9FCDB5; }

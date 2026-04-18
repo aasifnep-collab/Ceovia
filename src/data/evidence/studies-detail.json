@@ -1,0 +1,103 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "lastReviewed": "2026-04-17",
+    "curatedBy": "CEOVIA Clinical Research Team",
+    "changelog": [
+      {
+        "version": "1.0",
+        "date": "2026-04-17",
+        "added": 3,
+        "removed": 0,
+        "correctedBy": "CEOVIA Clinical Research Team",
+        "approvedBy": "CEOVIA Clinical Research Team"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": "DERM-001",
+      "summary": "Human study evaluating a topical sea buckthorn oil emulsion in relation to skin hydration and transepidermal water loss over time.",
+      "abstractSnippet": "Human study evaluating a topical sea buckthorn oil emulsion in relation to skin hydration and transepidermal water loss over time.",
+      "population": "Healthy adult male volunteers",
+      "sampleSize": 13,
+      "ingredientFocus": "Sea buckthorn oil emulsion",
+      "systemTags": ["dermatology"],
+      "evidenceLevel": "Human Data Available",
+      "humanStudy": true,
+      "keyFindings": [
+        "Skin hydration and transepidermal water loss were measured across an 84-day application period.",
+        "The active emulsion was compared with a base formulation in the same study design."
+      ],
+      "relevanceToCeovia": "This study may help support ingredient-level discussion around skin hydration and barrier-related parameters, but it should not be used as CEOVIA product-efficacy proof.",
+      "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/25362595/",
+      "citation": "Khan BA, Akhtar N. Hippophae rhamnoides oil-in-water (O/W) emulsion improves barrier function in healthy human subjects. Pak J Pharm Sci. 2014;27(6):1919-1922.",
+      "safetyNotes": "Topical emulsion study in healthy volunteers; route of administration and formulation differ from CEOVIA.",
+      "limitations": [
+        "Small sample size.",
+        "Single topical formulation.",
+        "Healthy-volunteer population."
+      ],
+      "complianceNote": "This study evaluates a specific topical formulation and does not represent CEOVIA or finished-product outcomes.",
+      "clinicalUseInsight": "Relevant for skin hydration and barrier-related moisture dynamics",
+      "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/25362595/",
+      "featuredNote": "Human data on hydration and barrier-related parameters"
+    },
+    {
+      "id": "DERM-002",
+      "summary": "Review article discussing sea buckthorn bioactives in relation to skin and mucosal barrier function, inflammation-related pathways, and oxidative processes.",
+      "abstractSnippet": "Review article discussing sea buckthorn bioactives in relation to skin and mucosal barrier function, inflammation-related pathways, and oxidative processes.",
+      "population": "Review article",
+      "sampleSize": null,
+      "ingredientFocus": "Sea buckthorn bioactives",
+      "systemTags": ["dermatology", "mucosal"],
+      "evidenceLevel": "Evidence Synthesis",
+      "humanStudy": false,
+      "keyFindings": [
+        "Reviews bioactive classes discussed in relation to barrier function, inflammation, and oxidative processes.",
+        "Synthesizes literature across skin and mucosal contexts rather than reporting a single intervention study."
+      ],
+      "relevanceToCeovia": "This review may help contextualise ingredient-level discussion around barrier and mucosal biology, but it should not be used as finished-product efficacy evidence.",
+      "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/41306783/",
+      "doi": "10.3389/fphar.2025.1643146",
+      "citation": "Song X, Sun X, Yuan H, Tang Y, Zheng F. The role of sea buckthorn in skin and mucosal health: a review from an anti-inflammatory perspective. Front Pharmacol. 2025;16:1643146.",
+      "safetyNotes": "Review-level source; no direct finished-product or CEOVIA-specific conclusions can be drawn from it.",
+      "limitations": [
+        "Review-level evidence rather than a single controlled trial.",
+        "Not specific to CEOVIA."
+      ],
+      "complianceNote": "This is a review of ingredient-level evidence and does not establish product-specific clinical effects.",
+      "clinicalUseInsight": "Relevant for understanding multi-pathway interactions in skin barrier and inflammatory processes",
+      "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/41306783/",
+      "featuredNote": "Broad overview of mechanisms across skin and mucosal systems"
+    },
+    {
+      "id": "DERM-003",
+      "summary": "In vitro study in human dermal fibroblasts examining sea buckthorn pulp oil in relation to ultraviolet-induced cellular stress and collagen-associated measures.",
+      "abstractSnippet": "In vitro study in human dermal fibroblasts examining sea buckthorn pulp oil in relation to ultraviolet-induced cellular stress and collagen-associated measures.",
+      "population": "Human dermal fibroblasts in vitro",
+      "sampleSize": null,
+      "ingredientFocus": "Sea buckthorn pulp oil",
+      "systemTags": ["dermatology", "oxidative"],
+      "evidenceLevel": "Biological Basis",
+      "humanStudy": false,
+      "keyFindings": [
+        "Assesses ultraviolet-related cell toxicity and collagen-associated measures in fibroblasts.",
+        "Reports pathway-level observations in an in vitro model."
+      ],
+      "relevanceToCeovia": "This study may help support ingredient-level discussion around oxidative and photo-induced cellular stress pathways, but it should not be used as clinical or product-efficacy evidence.",
+      "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/38796693/",
+      "doi": "10.1093/bbb/zbae071",
+      "citation": "Okamoto T, Nakashima F, Shibata T, Mori D. Seabuckthorn (Hippophae rhamnoides, L.) pulp oil prevents ultraviolet-induced damage in human fibroblasts. Biosci Biotechnol Biochem. 2024;88(8):948-955.",
+      "safetyNotes": "In vitro fibroblast study; no human clinical outcome or CEOVIA-specific formulation data are established.",
+      "limitations": [
+        "Cell-model study.",
+        "No human clinical population.",
+        "Not a CEOVIA-specific formulation."
+      ],
+      "complianceNote": "This is a mechanistic laboratory study and does not establish clinical or finished-product outcomes.",
+      "clinicalUseInsight": "Relevant for oxidative stress pathways and photo-induced cellular response",
+      "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/38796693/"
+    }
+  ]
+}

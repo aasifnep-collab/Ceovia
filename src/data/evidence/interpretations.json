@@ -1,0 +1,56 @@
+[
+  {
+    "domainId": "all",
+    "studyIds": ["DERM-001", "DERM-002", "DERM-003"],
+    "line1": "The current evidence index contains a small pilot set organised around skin barrier, hydration, and oxidative context.",
+    "line2": "The visible records include human, review, and mechanistic evidence so evidence types can be reviewed side by side.",
+    "line3": "This dataset is intentionally narrow at this stage and does not represent the full literature landscape across all CEOVIA-relevant systems.",
+    "line4": "These records do not establish finished-product outcomes or CEOVIA-specific clinical effects.",
+    "clinicianContext": "This evidence is relevant for contextualising how CEOVIA’s bioactives may be organised across skin, mucosal, and oxidative themes."
+  },
+  {
+    "domainId": "dermatology",
+    "studyIds": ["DERM-001", "DERM-002", "DERM-003"],
+    "line1": "Evidence in this domain focuses on skin barrier function, hydration, and oxidative processes.",
+    "line2": "Most available literature consists of reviews and mechanistic studies, with limited human data.",
+    "line3": "Human studies are present but often involve small cohorts and formulation-specific interventions.",
+    "line4": "This evidence does not establish finished-product outcomes or CEOVIA-specific clinical effects.",
+    "clinicianContext": "This evidence is relevant for understanding how CEOVIA’s bioactives may relate to skin barrier and oxidative processes."
+  },
+  {
+    "domainId": "mucosal",
+    "studyIds": ["DERM-002"],
+    "line1": "This domain currently contains review-level context related to surface integrity and mucosal health themes.",
+    "line2": "The visible record is a review rather than a domain-specific human study set.",
+    "line3": "No dedicated mucosal clinical records are yet included in this pilot dataset.",
+    "line4": "This evidence does not establish finished-product outcomes or CEOVIA-specific clinical effects.",
+    "clinicianContext": "This evidence is relevant for contextualising how CEOVIA’s bioactives may be discussed in relation to skin and mucosal barrier themes."
+  },
+  {
+    "domainId": "oxidative",
+    "studyIds": ["DERM-003"],
+    "line1": "This domain currently surfaces mechanistic context related to ultraviolet-induced stress and cellular oxidative response.",
+    "line2": "The visible record is laboratory-based and reflects biological context rather than clinical outcome data.",
+    "line3": "No human oxidative-stress study records are yet included in this pilot dataset.",
+    "line4": "This evidence does not establish finished-product outcomes or CEOVIA-specific clinical effects.",
+    "clinicianContext": "This evidence is relevant for understanding how CEOVIA’s bioactives may be contextualised around oxidative processes."
+  },
+  {
+    "domainId": "immune",
+    "studyIds": [],
+    "line1": "No curated study records are currently loaded for direct interpretation in this interface.",
+    "line2": "Future records may include review, mechanistic, or ingredient-level evidence depending on curation decisions.",
+    "line3": "This pilot dataset should not be read as a complete view of immune-related literature.",
+    "line4": "Any future summary here must remain supportive in tone and must not imply immune intervention or finished-product efficacy.",
+    "clinicianContext": "This evidence is relevant for contextualising how CEOVIA’s bioactives may be discussed in relation to balanced immune function."
+  },
+  {
+    "domainId": "metabolic",
+    "studyIds": [],
+    "line1": "No curated study records are currently loaded for direct interpretation in this interface.",
+    "line2": "Future records may span review, human, mechanistic, and ingredient-level evidence depending on curation choices.",
+    "line3": "This pilot dataset should not be read as a complete view of metabolic or whole-body literature.",
+    "line4": "Associations in this domain should remain ingredient-level and should not be converted into certainty beyond what the literature supports.",
+    "clinicianContext": "This evidence is relevant for understanding how CEOVIA’s bioactives may be contextualised around whole-body vitality."
+  }
+]
