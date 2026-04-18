@@ -10,6 +10,7 @@ type Props = {
   evidenceType: EvidenceType | 'all'
   onBodySystemChange: (value: BodySystemTag | 'all') => void
   onEvidenceTypeChange: (value: EvidenceType | 'all') => void
+  hideBodySystem?: boolean
 }
 
 export default function FilterBar({
@@ -17,29 +18,32 @@ export default function FilterBar({
   evidenceType,
   onBodySystemChange,
   onEvidenceTypeChange,
+  hideBodySystem = false,
 }: Props) {
   return (
     <section aria-label="Evidence filters" className="space-y-4.5">
-      <div className="flex flex-wrap gap-2.5">
-        {BODY_SYSTEM_OPTIONS.map((option) => {
-          const active = option.id === bodySystem
-          return (
-            <button
-              key={option.id}
-              type="button"
-              onClick={() => onBodySystemChange(option.id)}
-              className={[
-                'rounded-full border px-4 py-2.5 font-sans text-sm transition-colors duration-200',
-                active
-                  ? 'border-himalayan-green/20 bg-himalayan-green/10 text-deep-green'
-                  : 'border-himalayan-green/12 bg-white text-text-muted',
-              ].join(' ')}
-            >
-              {option.label}
-            </button>
-          )
-        })}
-      </div>
+      {!hideBodySystem ? (
+        <div className="flex flex-wrap gap-2.5">
+          {BODY_SYSTEM_OPTIONS.map((option) => {
+            const active = option.id === bodySystem
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => onBodySystemChange(option.id)}
+                className={[
+                  'rounded-full border px-4 py-2.5 font-sans text-sm transition-colors duration-200',
+                  active
+                    ? 'border-himalayan-green/20 bg-himalayan-green/10 text-deep-green'
+                    : 'border-himalayan-green/12 bg-white text-text-muted',
+                ].join(' ')}
+              >
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+      ) : null}
 
       <div className="max-w-[14rem]">
         <label htmlFor="evidence-type" className="sr-only">

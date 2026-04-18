@@ -9,8 +9,6 @@
  *     .ceovia-nav  — sticky at top:0; transparent → white on scroll
  *       logo | primary nav | right actions
  *   .mobile-overlay   — full-screen slide-in overlay (lg:hidden)
- *   .cart-overlay-bg  — backdrop for cart drawer
- *   .cart-drawer      — sliding cart panel (right)
  *
  * CSS approach: `<style>` tag is kept for:
  *   - @keyframes (stripFade, megaFadeIn)
@@ -19,13 +17,14 @@
  *   - :nth-child selectors (hamburger bar animation)
  *   - Class-toggled transitions (.open, .scrolled)
  *
- * Cart: MOCK_CART placeholder — no Shopify cart context exists yet.
- * TODO: connect to Shopify cart when context/hook is available.
+ * Launch note: CEOVIA uses direct checkout from the product page.
+ * A persistent cart drawer is intentionally removed until a real
+ * Shopify cart context exists.
  *
  * Fonts: loaded via next/font in layout.tsx — @import removed from style tag.
  */
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -56,19 +55,11 @@ type NavItem = {
   }
 }
 
-type CartItem = {
-  id: number
-  name: string
-  subtitle: string
-  price: string
-  qty: number
-}
-
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const STRIP_MESSAGES = [
-  'Cell Bioactivator · Clinically Structured 90-Day System',
-  'Himalayan Sea Buckthorn · Revitalisation · Restoration · Rejuvenation',
+  'Clinically Structured 90-Day Wellness System',
+  'Himalayan Sea Buckthorn Bioactives · Daily Wellness Support',
   'Free Shipping on orders over AED 400 · GCC, EU & UK',
 ]
 
@@ -86,17 +77,6 @@ const LANGUAGES: Language[] = [
   { code: 'fr', label: 'Français', dir: 'ltr' },
 ]
 
-// TODO: connect to Shopify cart context when available
-const MOCK_CART: CartItem[] = [
-  {
-    id: 1,
-    name: 'CEOVIA 2-Bottle Supply',
-    subtitle: 'Sea Buckthorn Softgel Capsules',
-    price: 'AED 913.00',
-    qty: 1,
-  },
-]
-
 function getFlag(code: Language['code']): string {
   if (code === 'en') return '🇬🇧'
   if (code === 'ar') return '🇦🇪'
@@ -112,7 +92,6 @@ export default function Navbar() {
   const [stripIndex,    setStripIndex]     = useState(0)
   const [stripVisible,  setStripVisible]   = useState(true)
   const [mobileOpen,    setMobileOpen]     = useState(false)
-  const [cartOpen,      setCartOpen]       = useState(false)
   const [langOpen,      setLangOpen]       = useState(false)
   const [activeLang,    setActiveLang]     = useState<Language>(LANGUAGES[0])
 
@@ -145,15 +124,11 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  // Lock body scroll when mobile menu or cart is open
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    document.body.style.overflow = mobileOpen || cartOpen ? 'hidden' : ''
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [mobileOpen, cartOpen])
-
-  // TODO: connect to Shopify cart context — replace MOCK_CART references
-  const cartCount    = useMemo(() => MOCK_CART.reduce((n, i) => n + i.qty, 0), [])
-  const cartSubtotal = useMemo(() => 'AED 913.00', [])
+  }, [mobileOpen])
 
   const closeMobileMenu = () => setMobileOpen(false)
 
@@ -883,18 +858,6 @@ export default function Navbar() {
 
               <div className="nav-divider" aria-hidden="true" />
 
-              {/* Search */}
-              <button
-                type="button"
-                className="nav-action-btn"
-                aria-label="Search"
-              >
-                <svg viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                  <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M12 12L16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              </button>
-
               {/* Contact */}
               <Link href="/contact" className="nav-contact">
                 Contact
@@ -987,89 +950,6 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
-
-      {/* ── CART DRAWER ────────────────────────────────────────────────── */}
-      {/* Backdrop */}
-      <div
-        className={`cart-overlay-bg${cartOpen ? ' open' : ''}`}
-        onClick={() => setCartOpen(false)}
-        aria-hidden="true"
-      />
-
-      {/* Drawer */}
-      <aside
-        className={`cart-drawer${cartOpen ? ' open' : ''}`}
-        aria-label="Shopping cart"
-        aria-hidden={!cartOpen}
-      >
-        <div className="cart-header">
-          <span className="cart-title">Your Cart</span>
-          <button
-            type="button"
-            className="cart-close"
-            onClick={() => setCartOpen(false)}
-            aria-label="Close cart"
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <path d="M3 3L15 15M15 3L3 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
-
-        {/* TODO: connect to Shopify cart context — replace MOCK_CART */}
-        <div className="cart-body">
-          {MOCK_CART.length === 0 ? (
-            <div className="cart-empty">
-              <p style={{ fontSize: 32, marginBottom: 12 }}>🌿</p>
-              <p>Your cart is empty.</p>
-            </div>
-          ) : (
-            MOCK_CART.map((item) => (
-              <div key={item.id} className="cart-item">
-                <div className="cart-item-img">
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-                    <circle cx="16" cy="16" r="12" stroke="#0E5A36" strokeWidth="1.5" opacity="0.4" />
-                    <path d="M12 16 Q16 8 20 16 Q16 24 12 16Z" fill="#0E5A36" opacity="0.5" />
-                  </svg>
-                </div>
-                <div className="cart-item-info">
-                  <div className="cart-item-name">{item.name}</div>
-                  <div className="cart-item-sub">{item.subtitle}</div>
-                  <div className="cart-item-row">
-                    <div className="qty-control">
-                      <button type="button" className="qty-btn" aria-label="Decrease quantity">−</button>
-                      <span className="qty-num">{item.qty}</span>
-                      <button type="button" className="qty-btn" aria-label="Increase quantity">+</button>
-                    </div>
-                    <span className="cart-item-price">{item.price}</span>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {MOCK_CART.length > 0 && (
-          <div className="cart-footer">
-            <div className="cart-subtotal">
-              <span>Subtotal</span>
-              {/* TODO: connect to Shopify cart context — replace cartSubtotal */}
-              <strong>{cartSubtotal}</strong>
-            </div>
-            {/* TODO: connect cart drawer CTA to the real Shopify cart/checkout flow */}
-            <Link href="/contact" className="cart-cta">
-              Proceed to Checkout →
-            </Link>
-            <button
-              type="button"
-              className="cart-continue"
-              onClick={() => setCartOpen(false)}
-            >
-              Continue Shopping
-            </button>
-          </div>
-        )}
-      </aside>
     </>
   )
 }

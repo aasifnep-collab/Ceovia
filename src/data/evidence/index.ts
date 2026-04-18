@@ -1,5 +1,6 @@
 import studiesMetaJson from './studies-meta.json'
 import interpretationsJson from './interpretations.json'
+import { exampleStagingEntries } from './staging/pubmed-extraction-template.ts'
 
 export type EvidenceType =
   | 'human-study'
@@ -94,7 +95,41 @@ export type Interpretation = {
 export type DrawerMode = 'all' | 'timeline' | 'systems' | 'filtered'
 
 export const evidenceMeta = studiesMetaJson as EvidenceMetaEnvelope
-export const evidenceRecords = evidenceMeta.records
+const existingRecordIds = new Set(evidenceMeta.records.map((record) => record.id))
+
+function toTimePeriodTag(year: number): TimePeriodTag {
+  if (year >= 2020) return '2020s'
+  if (year >= 2010) return '2010s'
+  if (year >= 2000) return '2000s'
+  if (year >= 1990) return '1990s'
+  return '1980s'
+}
+
+const supplementalDomainRecords: StudyMeta[] = exampleStagingEntries
+  .filter(
+    (record) =>
+      !existingRecordIds.has(record.internalStudyId) &&
+      record.bodySystemTags.some((tag) => tag === 'immune' || tag === 'metabolic'),
+  )
+  .map((record) => ({
+    id: record.internalStudyId,
+    slug: record.proposedSlug,
+    pmid: record.PMID,
+    title: record.articleTitle,
+    journal: record.journal,
+    year: record.year,
+    evidenceType: record.evidenceType,
+    confidenceLevel: record.confidenceLevel,
+    bodySystemTags: record.bodySystemTags,
+    featured: false,
+    timePeriodTag: toTimePeriodTag(record.year),
+    ingredientFocus: record.ingredientFocus,
+    shortSummary: record.keyObservations[0],
+    pubmedUrl: record.pubmedUrl,
+    doi: record.DOI || undefined,
+  }))
+
+export const evidenceRecords = [...evidenceMeta.records, ...supplementalDomainRecords]
 export const evidenceInterpretations = interpretationsJson as Interpretation[]
 
 export const BODY_SYSTEM_OPTIONS: Array<{ id: BodySystemTag | 'all'; label: string }> = [
@@ -102,6 +137,12 @@ export const BODY_SYSTEM_OPTIONS: Array<{ id: BodySystemTag | 'all'; label: stri
   { id: 'dermatology', label: 'Dermatology' },
   { id: 'mucosal', label: 'Mucosal' },
   { id: 'oxidative', label: 'Oxidative' },
+  { id: 'immune', label: 'Immune' },
+  { id: 'metabolic', label: 'Metabolic' },
+]
+
+export const CORE_DOMAIN_OPTIONS: Array<{ id: Extract<BodySystemTag, 'dermatology' | 'immune' | 'metabolic'>; label: string }> = [
+  { id: 'dermatology', label: 'Skin' },
   { id: 'immune', label: 'Immune' },
   { id: 'metabolic', label: 'Metabolic' },
 ]

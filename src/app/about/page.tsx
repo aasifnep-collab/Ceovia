@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import EntryHero from '@/components/ui/EntryHero'
 import CtaBanner from '@/components/sections/CtaBanner'
+import { buildPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Our Story — CEOVIA',
-  description: 'The story behind CEOVIA and the 90-day wellness system.',
-}
+  description: 'The story behind CEOVIA and the clinically structured 90-day wellness system.',
+  path: '/about',
+})
 
 export default function AboutPage() {
   return (
@@ -37,7 +39,11 @@ export default function AboutPage() {
                 supplement, but a structured daily practice designed for consistency.
               </p>
               <p className="font-sans text-body-md text-[#4A5C52] leading-relaxed">
-                Full story coming soon.
+                CEOVIA was shaped to feel more disciplined than the average supplement
+                launch: one ingredient source, one daily format, and a calmer
+                commitment to consistency over excess. The brand language, science
+                framing, and 90-day structure are all built around that same
+                principle of measured, premium trust.
               </p>
             </div>
           </div>

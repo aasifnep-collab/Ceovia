@@ -30,18 +30,16 @@ import EvidenceBadge    from '@/components/ui/EvidenceBadge'
 import DisclaimerBlock  from '@/components/ui/DisclaimerBlock'
 import CtaBanner        from '@/components/sections/CtaBanner'
 import Link             from 'next/link'
+import JsonLd           from '@/components/seo/JsonLd'
+import { buildPageMetadata, getCanonicalUrl } from '@/lib/metadata'
 
 // ── Page metadata ────────────────────────────────────────────────────────────
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'CEOVIA — 90-Day Wellness System',
   description:
-    'A structured daily supplement designed to support skin, energy, and overall wellness. Powered by 190+ bioactive compounds from Himalayan Sea Buckthorn seed oil.',
-  openGraph: {
-    title: 'CEOVIA — 90-Day Wellness System',
-    description:
-      'Powered by 190+ bioactive compounds from Himalayan Sea Buckthorn seed oil.',
-  },
-}
+    'A structured daily supplement designed to support skin, energy, and overall wellness. Powered by Himalayan Sea Buckthorn seed oil.',
+  path: '/products/ceovia-90-day',
+})
 
 // ── Section data ─────────────────────────────────────────────────────────────
 
@@ -128,8 +126,52 @@ const trustItems = [
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ProductPage() {
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'CEOVIA 90-Day Wellness System',
+    description:
+      'A structured daily supplement powered by Himalayan Sea Buckthorn seed oil to support skin, energy, and whole-body wellness.',
+    image: [getCanonicalUrl('/images/ceovia-bottle.png')],
+    brand: {
+      '@type': 'Brand',
+      name: 'CEOVIA',
+    },
+    sku: 'ceovia-90-day-system',
+    offers: [
+      {
+        '@type': 'Offer',
+        priceCurrency: 'USD',
+        price: '150',
+        availability: 'https://schema.org/InStock',
+        url: getCanonicalUrl('/products/ceovia-90-day'),
+      },
+      {
+        '@type': 'Offer',
+        priceCurrency: 'USD',
+        price: '249',
+        availability: 'https://schema.org/InStock',
+        url: getCanonicalUrl('/products/ceovia-90-day'),
+      },
+    ],
+  }
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  }
+
   return (
     <>
+      <JsonLd data={[productSchema, faqSchema]} />
 
       {/* ── 1. Product Hero ───────────────────────────────────────── */}
       <ProductHero />

@@ -32,14 +32,12 @@ export default function SupportCards({ inquiry }: Props) {
             <MailIcon className="h-4 w-4" />
           </div>
           <div>
-            <a
-              href="mailto:info@ceovia.com"
-              className="font-sans text-base font-medium text-[#1A1A1A] hover:text-[#0E5A36] hover:underline underline-offset-2"
-            >
+            <p className="font-sans text-base font-medium text-[#1A1A1A]">
               info@ceovia.com
-            </a>
+            </p>
             <p className="mt-1 font-sans text-sm text-[#6A776F]">
-              For all CEOVIA enquiries
+              Use the enquiry form for all CEOVIA requests so the team can route
+              them correctly.
             </p>
           </div>
         </div>

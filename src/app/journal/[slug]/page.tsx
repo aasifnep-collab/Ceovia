@@ -2,10 +2,12 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import JournalCard from '@/components/journal/JournalCard'
+import JsonLd from '@/components/seo/JsonLd'
 import {
   getJournalArticleBySlug,
   journalArticles,
 } from '@/lib/journal'
+import { buildPageMetadata, getCanonicalUrl } from '@/lib/metadata'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -27,10 +29,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  return {
+  return buildPageMetadata({
     title: `${article.title} — CEOVIA Journal`,
     description: article.excerpt,
-  }
+    path: `/journal/${article.slug}`,
+    ogType: 'article',
+    imagePath: `/journal/${article.slug}/opengraph-image`,
+  })
 }
 
 export default async function JournalArticlePage({ params }: Props) {
@@ -45,8 +50,55 @@ export default async function JournalArticlePage({ params }: Props) {
     .filter((candidate) => candidate.slug !== article.slug)
     .slice(0, 3)
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.excerpt,
+    articleSection: article.category,
+    datePublished: article.publishDate,
+    dateModified: article.publishDate,
+    mainEntityOfPage: getCanonicalUrl(`/journal/${article.slug}`),
+    publisher: {
+      '@type': 'Organization',
+      name: 'CEOVIA',
+      url: getCanonicalUrl('/'),
+      logo: {
+        '@type': 'ImageObject',
+        url: getCanonicalUrl('/images/ceovia-logo.jpg'),
+      },
+    },
+    image: [getCanonicalUrl(`/journal/${article.slug}/opengraph-image`)],
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: getCanonicalUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Journal',
+        item: getCanonicalUrl('/journal'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: article.title,
+        item: getCanonicalUrl(`/journal/${article.slug}`),
+      },
+    ],
+  }
+
   return (
     <article className="section-white">
+      <JsonLd data={[articleSchema, breadcrumbSchema]} />
       <div className="section-wrapper py-20 md:py-28">
         <div className="mx-auto max-w-[74ch]">
           <Link
@@ -136,4 +188,3 @@ export default async function JournalArticlePage({ params }: Props) {
     </article>
   )
 }
-

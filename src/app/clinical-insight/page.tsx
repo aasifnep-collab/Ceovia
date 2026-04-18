@@ -8,12 +8,14 @@ import NinetyDaySystem from '@/components/clinical-insight/NinetyDaySystem'
 import ClinicalFramework from '@/components/clinical-insight/ClinicalFramework'
 import ResearchGateway from '@/components/clinical-insight/ResearchGateway'
 import PartnerProgramme from '@/components/clinical-insight/PartnerProgramme'
+import { buildPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Clinical Insight — CEOVIA',
   description:
     "The science behind CEOVIA's whole-body support model, bioactive matrix, and practitioner-facing clinical rationale.",
-}
+  path: '/clinical-insight',
+})
 
 export default function ClinicalInsightPage() {
   return (

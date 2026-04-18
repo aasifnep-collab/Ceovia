@@ -23,8 +23,9 @@
  *   fallback → message + clickable suggested links (technical failure)
  */
 
-import { useState, useRef, useEffect, KeyboardEvent, FormEvent } from 'react'
+import { useState, useRef, useEffect, KeyboardEvent as ReactKeyboardEvent, FormEvent } from 'react'
 import { AnimatePresence, motion }    from 'framer-motion'
+import { usePathname }                from 'next/navigation'
 import { useConciergeChat }           from '@/hooks/useConciergeChat'
 import type { ChatMessage, SuggestedLink } from '@/hooks/useConciergeChat'
 
@@ -42,13 +43,18 @@ interface ChatWidgetProps {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function ChatWidget({ market = 'global' }: ChatWidgetProps) {
+  const pathname = usePathname()
   const [isOpen,      setIsOpen]      = useState(false)
   const [inputValue,  setInputValue]  = useState('')
   const messagesEndRef                = useRef<HTMLDivElement>(null)
   const inputRef                      = useRef<HTMLInputElement>(null)
+  const panelRef                      = useRef<HTMLDivElement>(null)
+  const previousFocusRef              = useRef<HTMLElement | null>(null)
 
   const { messages, isLoading, rateLimitRetryAt, sendMessage, clearMessages } =
     useConciergeChat(market)
+
+  const isSuppressedRoute = pathname === '/products/ceovia-90-day'
 
   // ── Scroll to latest message ───────────────────────────────────────────────
   useEffect(() => {
@@ -60,9 +66,48 @@ export function ChatWidget({ market = 'global' }: ChatWidgetProps) {
   // ── Focus input when panel opens ──────────────────────────────────────────
   useEffect(() => {
     if (isOpen) {
+      previousFocusRef.current = document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null
       const timer = setTimeout(() => inputRef.current?.focus(), 160)
       return () => clearTimeout(timer)
     }
+
+    previousFocusRef.current?.focus()
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false)
+        return
+      }
+
+      if (event.key !== 'Tab' || !panelRef.current) return
+
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )
+
+      if (focusable.length === 0) return
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeydown as unknown as EventListener)
+    return () =>
+      document.removeEventListener('keydown', handleKeydown as unknown as EventListener)
   }, [isOpen])
 
   const isRateLimited =
@@ -78,7 +123,7 @@ export function ChatWidget({ market = 'global' }: ChatWidgetProps) {
     await sendMessage(msg)
   }
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       void handleSubmit(e as unknown as FormEvent)
@@ -91,6 +136,10 @@ export function ChatWidget({ market = 'global' }: ChatWidgetProps) {
     isLoading &&
     lastMsg?.role === 'assistant' &&
     lastMsg?.content === ''
+
+  if (isSuppressedRoute) {
+    return null
+  }
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 print:hidden">
@@ -109,6 +158,7 @@ export function ChatWidget({ market = 'global' }: ChatWidgetProps) {
             role="dialog"
             aria-modal="true"
             aria-label="CEOVIA Concierge Chat"
+            ref={panelRef}
           >
 
             {/* Header */}

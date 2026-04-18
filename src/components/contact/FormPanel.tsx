@@ -11,6 +11,8 @@ type Props = {
   values: FormValues
   onFieldChange: (fieldId: string, value: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  submissionState: 'idle' | 'loading' | 'success' | 'error'
+  submissionMessage: string
 }
 
 function Field({
@@ -74,7 +76,14 @@ function Field({
   )
 }
 
-export default function FormPanel({ inquiry, values, onFieldChange, onSubmit }: Props) {
+export default function FormPanel({
+  inquiry,
+  values,
+  onFieldChange,
+  onSubmit,
+  submissionState,
+  submissionMessage,
+}: Props) {
   return (
     <div className="rounded-[28px] border border-[#DCE3DE] bg-white p-7 shadow-[0_14px_34px_rgba(17,38,28,0.045)] md:p-9">
       <div className="mb-9 flex items-start gap-4">
@@ -107,11 +116,24 @@ export default function FormPanel({ inquiry, values, onFieldChange, onSubmit }: 
 
         <button
           type="submit"
+          disabled={submissionState === 'loading'}
           className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-[8px] bg-[#0E5A36] px-8 py-4.5 font-sans text-base font-medium text-white transition-all duration-200 hover:bg-[#0A4428] hover:shadow-[0_12px_24px_rgba(14,90,54,0.12)]"
         >
-          Send Enquiry
+          {submissionState === 'loading' ? 'Sending…' : 'Send Enquiry'}
           <SendIcon className="h-4 w-4" />
         </button>
+
+        {submissionState !== 'idle' && submissionMessage ? (
+          <p
+            className={[
+              'font-sans text-sm leading-relaxed',
+              submissionState === 'success' ? 'text-[#0E5A36]' : 'text-[#B42318]',
+            ].join(' ')}
+            role={submissionState === 'error' ? 'alert' : 'status'}
+          >
+            {submissionMessage}
+          </p>
+        ) : null}
       </form>
     </div>
   )

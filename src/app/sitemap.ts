@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { journalArticles } from '@/lib/journal'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://ceovia.com'
@@ -9,15 +10,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/system',
     '/ingredients',
     '/science',
+    '/clinical-insight',
+    '/journal',
     '/about',
     '/contact',
-    '/practitioners',
+    '/shipping',
   ]
 
-  return routes.map((route) => ({
+  const journalRoutes = journalArticles.map((article) => `/journal/${article.slug}`)
+
+  return [...routes, ...journalRoutes].map((route) => ({
     url: `${base}${route}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
-    priority: route === '/' ? 1 : 0.8,
+    priority: route === '/' ? 1 : route.startsWith('/products') ? 0.9 : 0.8,
   }))
 }

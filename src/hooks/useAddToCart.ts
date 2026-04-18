@@ -15,6 +15,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { trackEvent } from '@/lib/analytics'
 import {
   createCheckout,
   createSubscriptionCheckout,
@@ -110,6 +111,9 @@ export function useAddToCart(): UseAddToCartReturn {
       }
 
       setIsSuccess(true)
+      trackEvent('checkout_redirect', {
+        variant: variantKey,
+      })
 
       // Brief visual confirmation before navigation
       scheduleTimeout(() => {

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import {
   BODY_SYSTEM_LABELS,
+  CORE_DOMAIN_OPTIONS,
   MODE_TITLES,
   evidenceMeta,
   evidenceRecords,
@@ -30,8 +31,8 @@ type Props = {
   onClose: () => void
 }
 
-function getHeader(mode: DrawerMode, domain: BodySystemTag | null, count: number) {
-  if (mode === 'filtered' && domain) {
+function getHeader(mode: DrawerMode, domain: BodySystemTag | 'all', count: number) {
+  if (domain !== 'all') {
     return `${BODY_SYSTEM_LABELS[domain]} — ${count} curated studies`
   }
   return `${MODE_TITLES[mode]} — ${count} curated studies`
@@ -47,6 +48,9 @@ export default function EvidenceDrawer({
   const [detailsLoaded, setDetailsLoaded] = useState(false)
   const [hydrated, setHydrated] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
+  const [activeDomain, setActiveDomain] = useState<'dermatology' | 'immune' | 'metabolic'>(
+    initialDomain === 'immune' || initialDomain === 'metabolic' ? initialDomain : 'dermatology',
+  )
   const panelRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const lastActiveElement = useRef<HTMLElement | null>(null)
@@ -69,6 +73,14 @@ export default function EvidenceDrawer({
     records: evidenceRecords,
     initialDomain,
   })
+
+  useEffect(() => {
+    if (!open || mode === 'systems') return
+    const nextDomain =
+      initialDomain === 'immune' || initialDomain === 'metabolic' ? initialDomain : 'dermatology'
+    setActiveDomain(nextDomain)
+    setBodySystem(nextDomain)
+  }, [open, mode, initialDomain, setBodySystem])
 
   useEffect(() => {
     setHydrated(true)
@@ -151,7 +163,7 @@ export default function EvidenceDrawer({
   }, [open, onClose])
 
   const interpretation = getInterpretation(
-    mode === 'filtered' && initialDomain ? initialDomain : bodySystem === 'all' ? 'all' : bodySystem,
+    mode === 'systems' ? 'all' : activeDomain,
   )
 
   const featuredStudies = useMemo(() => {
@@ -173,6 +185,11 @@ export default function EvidenceDrawer({
       studies: filteredRecords.filter((record) => record.bodySystemTags.includes(domainId)),
     }))
   }, [filteredRecords])
+
+  const handleDomainChange = (domain: 'dermatology' | 'immune' | 'metabolic') => {
+    setActiveDomain(domain)
+    setBodySystem(domain)
+  }
 
   if (!hydrated || !open) return null
 
@@ -222,6 +239,7 @@ export default function EvidenceDrawer({
             featuredStudies={featuredStudies}
             details={details}
             bodySystem={bodySystem}
+            activeDomain={activeDomain}
             evidenceType={evidenceType}
             filteredRecords={filteredRecords}
             visibleRecords={visibleRecords}
@@ -232,10 +250,11 @@ export default function EvidenceDrawer({
             suggestedReset={suggestedReset}
             setBodySystem={setBodySystem}
             setEvidenceType={setEvidenceType}
+            setActiveDomain={handleDomainChange}
             setPage={setPage}
             resetAll={resetAll}
             onClose={onClose}
-            header={getHeader(mode, initialDomain, filteredRecords.length)}
+            header={getHeader(mode, mode === 'systems' ? 'all' : activeDomain, filteredRecords.length)}
           />
         </motion.div>
       </motion.div>
@@ -251,6 +270,7 @@ type DrawerContentProps = {
   featuredStudies: typeof evidenceRecords
   details: Record<string, StudyDetail>
   bodySystem: BodySystemTag | 'all'
+  activeDomain: 'dermatology' | 'immune' | 'metabolic'
   evidenceType: 'all' | 'human-study' | 'review' | 'mechanistic' | 'ingredient-level'
   filteredRecords: typeof evidenceRecords
   visibleRecords: typeof evidenceRecords
@@ -265,6 +285,7 @@ type DrawerContentProps = {
   suggestedReset: string | null
   setBodySystem: (value: BodySystemTag | 'all') => void
   setEvidenceType: (value: 'all' | 'human-study' | 'review' | 'mechanistic' | 'ingredient-level') => void
+  setActiveDomain: (value: 'dermatology' | 'immune' | 'metabolic') => void
   setPage: (value: number) => void
   resetAll: () => void
   onClose: () => void
@@ -278,6 +299,7 @@ function DrawerContent({
   featuredStudies,
   details,
   bodySystem,
+  activeDomain,
   evidenceType,
   filteredRecords,
   visibleRecords,
@@ -288,6 +310,7 @@ function DrawerContent({
   suggestedReset,
   setBodySystem,
   setEvidenceType,
+  setActiveDomain,
   setPage,
   resetAll,
   onClose,
@@ -318,6 +341,34 @@ function DrawerContent({
 
       <div className="flex-1 overflow-y-auto px-5 py-5 md:px-6 md:py-6">
         <div className="mx-auto max-w-3xl space-y-9 md:space-y-10">
+          {mode !== 'systems' ? (
+            <section aria-label="Evidence domains" className="space-y-3">
+              <p className="font-sans text-[11px] uppercase tracking-[0.12em] text-text-muted">
+                Domain
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                {CORE_DOMAIN_OPTIONS.map((option) => {
+                  const active = option.id === activeDomain
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setActiveDomain(option.id)}
+                      className={[
+                        'rounded-full border px-4 py-2.5 font-sans text-sm transition-colors duration-200',
+                        active
+                          ? 'border-himalayan-green/20 bg-himalayan-green/10 text-deep-green'
+                          : 'border-himalayan-green/12 bg-white text-text-muted',
+                      ].join(' ')}
+                    >
+                      {option.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </section>
+          ) : null}
+
           <ClinicalInterpretationSummary interpretation={interpretation} />
 
           {mode !== 'systems' ? (
@@ -330,6 +381,7 @@ function DrawerContent({
               evidenceType={evidenceType}
               onBodySystemChange={setBodySystem}
               onEvidenceTypeChange={setEvidenceType}
+              hideBodySystem
             />
           ) : null}
 

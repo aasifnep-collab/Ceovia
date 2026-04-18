@@ -23,18 +23,30 @@ const images = [
 export default function ProductImageCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [reducedMotion, setReducedMotion] = useState(false)
 
   const goTo = (index: number) => setCurrentIndex(index)
   const goNext = () => setCurrentIndex((index) => (index + 1) % images.length)
   const goPrev = () => setCurrentIndex((index) => (index - 1 + images.length) % images.length)
 
   useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReducedMotion(media.matches)
+    update()
+    media.addEventListener('change', update)
+
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion) return
+
     const timer = window.setInterval(() => {
       setCurrentIndex((index) => (index + 1) % images.length)
     }, 3200)
 
     return () => window.clearInterval(timer)
-  }, [])
+  }, [reducedMotion])
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     setTouchStartX(event.touches[0]?.clientX ?? null)

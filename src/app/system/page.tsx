@@ -3,12 +3,14 @@ import Link from 'next/link'
 import EntryHero from '@/components/ui/EntryHero'
 import CtaBanner from '@/components/sections/CtaBanner'
 import DisclaimerBlock from '@/components/ui/DisclaimerBlock'
+import { buildPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'The System — CEOVIA',
   description:
     'A structured 90-day protocol designed for consistent daily use. Three phases: Reset, Restore, Optimise.',
-}
+  path: '/system',
+})
 
 const phases = [
   {

@@ -9,11 +9,52 @@ import { EASE_OUT } from '@/lib/motion'
 export default function PartnerProgramme() {
   const [modalOpen, setModalOpen] = useState(false)
   const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
 
-  const handleDossierRequest = () => {
-    if (!email.trim()) return
-    window.location.href = `mailto:info@ceovia.com?subject=${encodeURIComponent('Clinical Dossier Request')}&body=${encodeURIComponent(`Please send the CEOVIA Clinical Dossier to: ${email}`)}`
-    setModalOpen(false)
+  const handleDossierRequest = async () => {
+    if (!email.trim()) {
+      setStatus('error')
+      setMessage('Please enter a valid professional email.')
+      return
+    }
+
+    setStatus('loading')
+    setMessage('')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          inquiryType: 'clinic',
+          name: 'Clinical dossier request',
+          email,
+          subject: 'Clinical Dossier Request',
+          message: `Please send the CEOVIA clinical dossier to ${email}.`,
+          companyOrClinic: '',
+        }),
+      })
+
+      const result = (await response.json()) as { error?: string; message?: string }
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Unable to submit your request right now.')
+      }
+
+      setStatus('success')
+      setMessage(result.message || 'Your request has been received.')
+      setEmail('')
+    } catch (error) {
+      setStatus('error')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : 'Unable to submit your request right now.',
+      )
+    }
   }
 
   return (
@@ -101,7 +142,13 @@ export default function PartnerProgramme() {
                 id="dossier-email"
                 type="email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => {
+                  setEmail(event.target.value)
+                  if (status !== 'idle') {
+                    setStatus('idle')
+                    setMessage('')
+                  }
+                }}
                 className="mt-2 w-full rounded-xl border border-himalayan-green/20 px-4 py-3 font-[family-name:var(--font-sans)] text-sm text-text-dark focus:border-himalayan-green focus:outline-none focus:ring-2 focus:ring-himalayan-green/20"
                 placeholder="Professional email"
               />
@@ -110,18 +157,35 @@ export default function PartnerProgramme() {
                 <button
                   type="button"
                   onClick={handleDossierRequest}
+                  disabled={status === 'loading'}
                   className="rounded-md bg-deep-green px-5 py-3 font-[family-name:var(--font-sans)] text-sm font-medium text-white"
                 >
-                  Submit
+                  {status === 'loading' ? 'Submitting…' : 'Submit'}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => {
+                    setModalOpen(false)
+                    setStatus('idle')
+                    setMessage('')
+                  }}
                   className="rounded-md border border-himalayan-green/20 px-5 py-3 font-[family-name:var(--font-sans)] text-sm font-medium text-text-dark"
                 >
                   Cancel
                 </button>
               </div>
+
+              {message ? (
+                <p
+                  className={[
+                    'mt-4 font-[family-name:var(--font-sans)] text-sm',
+                    status === 'success' ? 'text-himalayan-green' : 'text-[#B42318]',
+                  ].join(' ')}
+                  role={status === 'error' ? 'alert' : 'status'}
+                >
+                  {message}
+                </p>
+              ) : null}
             </motion.div>
           </motion.div>
         )}

@@ -18,6 +18,7 @@
 
 import { useState } from 'react'
 import { useAddToCart } from '@/hooks/useAddToCart'
+import { trackEvent } from '@/lib/analytics'
 
 type Variant = {
   id: string
@@ -47,7 +48,7 @@ const VARIANTS: Variant[] = [
   {
     id: '2-bottles',
     label: '2 Bottles',
-    protocolLabel: 'Recommended 90-Day Path',
+    protocolLabel: 'Recommended Full-Protocol Supply',
     capsules: '240 Capsules',
     duration: '120-Day Supply',
     price: 249,
@@ -64,11 +65,16 @@ export default function ProgramSelector() {
   const { addToCart, isLoading, isSuccess, error } = useAddToCart()
   const ctaLabel =
     selected.id === '2-bottles'
-      ? 'Start Recommended 90-Day Path'
+      ? 'Start Recommended Full-Protocol Supply'
       : 'Begin with Foundational Supply'
 
   const handleSelect = (v: Variant) => {
     setSelectedId(v.id)
+    trackEvent('program_selection', {
+      variant: v.id,
+      label: v.label,
+      duration: v.duration,
+    })
     window.dispatchEvent(
       new CustomEvent('ceovia:variant', {
         detail: { id: v.id, label: v.label, priceUSD: v.price, priceAED: v.aed },
@@ -94,7 +100,7 @@ export default function ProgramSelector() {
             Choose the supply that fits your routine
           </h2>
           <p className="mt-4 max-w-[39rem] mx-auto font-sans text-sm leading-relaxed text-[#4A5C52] md:text-[0.98rem]">
-            Both options follow the same 2-capsule daily format. The recommended path gives you enough continuity to complete the 90-day protocol with room to stay consistent.
+            Both options follow the same 2-capsule daily format. The recommended supply gives you enough continuity to complete the 90-day protocol with additional buffer for a consistent routine.
           </p>
           <p className="mt-3 max-w-[34rem] mx-auto font-sans text-xs leading-relaxed tracking-[0.01em] text-[#0E5A36]/82 md:text-sm">
             The recommended option is designed to align with CEOVIA&apos;s intended daily rhythm.

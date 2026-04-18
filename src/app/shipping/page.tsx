@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { buildPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Shipping & Returns — CEOVIA',
   description: 'CEOVIA shipping policy, delivery times, and returns process.',
-}
+  path: '/shipping',
+})
 
 export default function ShippingPage() {
   return (
@@ -54,19 +56,17 @@ export default function ShippingPage() {
             </div>
 
             <p className="font-sans text-body-xs text-[#4A5C52] leading-relaxed border-t border-[#C8D1CB]/40 pt-8">
-              For shipping or returns enquiries:{' '}
-              <a
-                href="mailto:info@ceovia.com"
-                className="text-[#0E5A36] hover:underline underline-offset-2"
-              >
-                info@ceovia.com
-              </a>
+              For shipping or returns enquiries, please use the contact form so the
+              CEOVIA team can route your request correctly.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap gap-3">
             <Link href="/products/ceovia-90-day" className="btn-primary">
               Shop Now
+            </Link>
+            <Link href="/contact" className="btn-secondary">
+              Contact Support
             </Link>
           </div>
         </div>

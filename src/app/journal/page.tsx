@@ -3,12 +3,14 @@ import Link from 'next/link'
 import EntryHero from '@/components/ui/EntryHero'
 import JournalCard from '@/components/journal/JournalCard'
 import { journalArticles } from '@/lib/journal'
+import { buildPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Journal — CEOVIA',
   description:
     'The CEOVIA Journal. Thoughtful perspectives on cellular wellness, longevity, supplement science, beauty from within, and measurable transformation.',
-}
+  path: '/journal',
+})
 
 export default function JournalPage() {
   return (
@@ -31,10 +33,10 @@ export default function JournalPage() {
 
           <div className="mt-12 flex justify-center">
             <Link
-              href="/journal"
+              href="/science"
               className="inline-flex items-center justify-center rounded-full border border-[#B9C8BF] bg-white px-7 py-3 font-sans text-[0.95rem] font-medium tracking-[0.01em] text-[#12452E] transition-all duration-200 hover:border-[#12452E] hover:bg-[#F7FAF8]"
             >
-              Explore the Journal
+              Explore the Science
             </Link>
           </div>
         </div>

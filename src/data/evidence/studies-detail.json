@@ -1,9 +1,17 @@
 {
   "_meta": {
-    "version": "1.0",
-    "lastReviewed": "2026-04-17",
+    "version": "1.1",
+    "lastReviewed": "2026-04-18",
     "curatedBy": "CEOVIA Clinical Research Team",
     "changelog": [
+      {
+        "version": "1.1",
+        "date": "2026-04-18",
+        "added": 2,
+        "removed": 0,
+        "correctedBy": "CEOVIA Clinical Research Team",
+        "approvedBy": "CEOVIA Clinical Research Team"
+      },
       {
         "version": "1.0",
         "date": "2026-04-17",
@@ -39,7 +47,7 @@
         "Healthy-volunteer population."
       ],
       "complianceNote": "This study evaluates a specific topical formulation and does not represent CEOVIA or finished-product outcomes.",
-      "clinicalUseInsight": "Relevant for skin hydration and barrier-related moisture dynamics",
+      "clinicalUseInsight": "Relevant for discussing barrier-related hydration measures in a topical healthy-skin context, with clear formulation limits.",
       "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/25362595/",
       "featuredNote": "Human data on hydration and barrier-related parameters"
     },
@@ -67,7 +75,7 @@
         "Not specific to CEOVIA."
       ],
       "complianceNote": "This is a review of ingredient-level evidence and does not establish product-specific clinical effects.",
-      "clinicalUseInsight": "Relevant for understanding multi-pathway interactions in skin barrier and inflammatory processes",
+      "clinicalUseInsight": "Relevant for literature-level context on barrier and inflammation-related pathways, without establishing intervention-specific outcomes.",
       "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/41306783/",
       "featuredNote": "Broad overview of mechanisms across skin and mucosal systems"
     },
@@ -96,8 +104,64 @@
         "Not a CEOVIA-specific formulation."
       ],
       "complianceNote": "This is a mechanistic laboratory study and does not establish clinical or finished-product outcomes.",
-      "clinicalUseInsight": "Relevant for oxidative stress pathways and photo-induced cellular response",
+      "clinicalUseInsight": "Relevant for photo-induced oxidative-stress pathway context in fibroblast models, without direct clinical translation.",
       "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/38796693/"
+    },
+    {
+      "id": "IMM-001",
+      "summary": "Mechanistic macrophage study examining a sea buckthorn flavonoid fraction in relation to LPS-stimulated inflammatory signaling pathways.",
+      "abstractSnippet": "Mechanistic macrophage study examining a sea buckthorn flavonoid fraction in relation to LPS-stimulated inflammatory signaling pathways.",
+      "population": "LPS-stimulated RAW264.7 macrophage cells",
+      "sampleSize": null,
+      "ingredientFocus": "Sea buckthorn flavonoids",
+      "systemTags": ["immune"],
+      "evidenceLevel": "Biological Basis",
+      "humanStudy": false,
+      "keyFindings": [
+        "The study focused on MAPK and NF-kB signaling activity in a macrophage model.",
+        "Observed findings were limited to laboratory inflammatory-response markers under in vitro conditions."
+      ],
+      "relevanceToCeovia": "This study may help contextualise ingredient-level discussion around macrophage signaling pathways, but it should not be used as evidence of CEOVIA-specific immune effects.",
+      "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/28256654/",
+      "doi": "10.1039/c6fo01873d",
+      "citation": "Yang B, et al. Flavonoids from sea buckthorn inhibit the lipopolysaccharide-induced inflammatory response in RAW264.7 macrophages through the MAPK and NF-kB pathways. Food Funct. 2017.",
+      "safetyNotes": "Cell-model evidence only; no human immune safety or clinical outcome conclusions can be drawn from this record.",
+      "limitations": [
+        "In vitro macrophage model.",
+        "No human participants.",
+        "Pathway-level observations may not translate directly to whole-body immune outcomes."
+      ],
+      "complianceNote": "This is a mechanistic laboratory study and does not establish clinical immune outcomes or finished-product effects.",
+      "clinicalUseInsight": "Relevant for pathway-level context on cytokine-associated macrophage signaling, with no direct human immune inference.",
+      "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/28256654/"
+    },
+    {
+      "id": "MET-002",
+      "summary": "Randomized crossover human study evaluating sea buckthorn fruit puree in relation to plasma glucose measures in adults with impaired glucose regulation.",
+      "abstractSnippet": "Randomized crossover human study evaluating sea buckthorn fruit puree in relation to plasma glucose measures in adults with impaired glucose regulation.",
+      "population": "Adults with impaired glucose regulation",
+      "sampleSize": 38,
+      "ingredientFocus": "Sea buckthorn fruit puree",
+      "systemTags": ["metabolic"],
+      "evidenceLevel": "Human Data Available",
+      "humanStudy": true,
+      "keyFindings": [
+        "The study used a two-stage randomized crossover design with intervention and washout periods.",
+        "Observed outcomes were limited to glycemic measures collected within the studied food-puree intervention context."
+      ],
+      "relevanceToCeovia": "This study may support cautious ingredient-level discussion around glycemic-response context, but it should not be used as CEOVIA product-efficacy proof.",
+      "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/33917994/",
+      "doi": "10.3390/foods10040804",
+      "citation": "Effect of Sea Buckthorn on Plasma Glucose in Individuals with Impaired Glucose Regulation: A Two-Stage Randomized Crossover Intervention Study. Foods. 2021.",
+      "safetyNotes": "Human food-intervention study in a specific impaired-glucose-regulation cohort; route and composition differ from CEOVIA.",
+      "limitations": [
+        "Condition-specific cohort rather than a general population sample.",
+        "Food-puree intervention differs from CEOVIA formulation.",
+        "Findings should remain limited to the measured glycemic context."
+      ],
+      "complianceNote": "This human study does not establish CEOVIA-specific metabolic outcomes or finished-product efficacy.",
+      "clinicalUseInsight": "Relevant for discussing measured glycemic-response context in a food-intervention study, with population and formulation limits.",
+      "publisherUrl": "https://pubmed.ncbi.nlm.nih.gov/33917994/"
     }
   ]
 }

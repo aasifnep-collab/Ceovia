@@ -4,12 +4,14 @@ import EntryHero from '@/components/ui/EntryHero'
 import EvidenceBadge from '@/components/ui/EvidenceBadge'
 import CtaBanner from '@/components/sections/CtaBanner'
 import DisclaimerBlock from '@/components/ui/DisclaimerBlock'
+import { buildPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Ingredients — CEOVIA',
   description:
     '190+ bioactive compounds from supercritical CO₂-extracted Himalayan Sea Buckthorn seed oil. The only plant source of all four omegas simultaneously.',
-}
+  path: '/ingredients',
+})
 
 const compounds = [
   {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Hero            from '@/components/sections/Hero'
 import SystemBlueprint from '@/components/sections/SystemBlueprint'
 import TrustStrip      from '@/components/sections/TrustStrip'
@@ -7,6 +8,14 @@ import System          from '@/components/sections/System'
 import PricingAnchor   from '@/components/sections/PricingAnchor'
 import JournalPreview  from '@/components/sections/JournalPreview'
 import CtaBanner       from '@/components/sections/CtaBanner'
+import { buildPageMetadata } from '@/lib/metadata'
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'CEOVIA — Clinically Structured Wellness',
+  description:
+    'A clinically structured 90-day system built around Himalayan Sea Buckthorn seed oil to support skin, energy, and whole-body wellbeing.',
+  path: '/',
+})
 
 /**
  * Homepage — section order:

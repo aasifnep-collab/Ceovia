@@ -5,19 +5,21 @@ import SectionHeader from '@/components/ui/SectionHeader'
 import EvidenceBadge from '@/components/ui/EvidenceBadge'
 import CtaBanner from '@/components/sections/CtaBanner'
 import DisclaimerBlock from '@/components/ui/DisclaimerBlock'
+import { buildPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'The Science — CEOVIA',
   description:
     'The evidence framework behind CEOVIA. Peer-reviewed human research, in-vivo studies, and the bioactive profile of Himalayan Sea Buckthorn seed oil.',
-}
+  path: '/science',
+})
 
 const evidenceTiers = [
   {
     tier: 'gold' as const,
     label: 'Peer-Reviewed Human Research',
     description:
-      'Randomised controlled trials and observational studies in human subjects. The gold standard of evidence — direct clinical context for Sea Buckthorn\'s bioactive profile.',
+      'Randomised controlled trials and observational studies in human subjects. This is the most decision-relevant evidence tier for understanding how Sea Buckthorn has been studied in people.',
   },
   {
     tier: 'silver' as const,
@@ -52,7 +54,7 @@ const keyAreas = [
   },
   {
     heading: 'Antioxidant Capacity',
-    body: 'The combined Vitamin E, carotenoid, and flavonoid content of Sea Buckthorn seed oil represents one of the most complex plant-based antioxidant profiles in clinical literature.',
+    body: 'The combined Vitamin E, carotenoid, and flavonoid content of Sea Buckthorn seed oil contributes to a broad antioxidant profile discussed across the available literature.',
     badge: 'silver' as const,
   },
   {

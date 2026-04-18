@@ -3,8 +3,6 @@
 import { useId, useState } from 'react'
 import {
   BODY_SYSTEM_LABELS,
-  CONFIDENCE_LABELS,
-  EVIDENCE_TYPE_BADGE_STYLES,
   type StudyDetail,
   type StudyMeta,
 } from '@/data/evidence'
@@ -15,17 +13,32 @@ type Props = {
   featured?: boolean
 }
 
-function dots(level: 1 | 2 | 3) {
-  return [1, 2, 3].map((dot) => (
-    <span
-      key={dot}
-      aria-hidden="true"
-      className={[
-        'h-2 w-2 rounded-full border border-himalayan-green/30',
-        dot <= level ? 'bg-himalayan-green' : 'bg-transparent',
-      ].join(' ')}
-    />
-  ))
+function getEvidenceTypeLabel(evidenceType: StudyMeta['evidenceType']) {
+  switch (evidenceType) {
+    case 'human-study':
+      return 'Human Study'
+    case 'mechanistic':
+      return 'Mechanistic'
+    case 'review':
+      return 'Review'
+    case 'ingredient-level':
+      return 'Ingredient-Level'
+    default:
+      return evidenceType
+  }
+}
+
+function getConfidenceLabel(level: StudyMeta['confidenceLevel']) {
+  switch (level) {
+    case 3:
+      return 'High Confidence'
+    case 2:
+      return 'Moderate Confidence'
+    case 1:
+      return 'Low Confidence'
+    default:
+      return 'Unspecified Confidence'
+  }
 }
 
 export default function StudyCard({ study, detail, featured = false }: Props) {
@@ -33,6 +46,9 @@ export default function StudyCard({ study, detail, featured = false }: Props) {
   const panelId = useId()
   const hasComplianceNote =
     study.evidenceType === 'mechanistic' || study.evidenceType === 'ingredient-level'
+  const [primaryDomain, ...secondaryDomains] = study.bodySystemTags
+  const evidenceTypeLabel = getEvidenceTypeLabel(study.evidenceType)
+  const confidenceLabel = getConfidenceLabel(study.confidenceLevel)
   const snippet =
     detail?.abstractSnippet ??
     study.shortSummary ??
@@ -57,37 +73,35 @@ export default function StudyCard({ study, detail, featured = false }: Props) {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-himalayan-green/12 px-3 py-1.5">
-            <div className="flex items-center gap-1">{dots(study.confidenceLevel)}</div>
-            <span className="font-sans text-xs text-text-dark">
-              {CONFIDENCE_LABELS[study.confidenceLevel]}
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-sans text-[11px] uppercase tracking-[0.12em] text-text-muted">
+              Primary domain
+            </span>
+            <span className="inline-flex rounded-full border border-himalayan-green/16 bg-himalayan-green/8 px-3 py-1.5 font-sans text-xs text-deep-green">
+              {BODY_SYSTEM_LABELS[primaryDomain]}
             </span>
           </div>
 
-          <span
-            className={[
-              'inline-flex rounded-full border px-3 py-1.5 font-sans text-xs',
-              EVIDENCE_TYPE_BADGE_STYLES[study.evidenceType],
-            ].join(' ')}
-          >
-            {study.evidenceType}
-          </span>
-
-          {study.bodySystemTags.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex rounded-full border border-himalayan-green/12 px-3 py-1.5 font-sans text-xs text-text-muted"
-            >
-              {BODY_SYSTEM_LABELS[tag]}
-            </span>
-          ))}
-
-          {detail?.clinicalUseInsight ? (
-            <span className="inline-flex rounded-full border border-himalayan-green/12 px-3 py-1.5 font-sans text-xs text-deep-green">
-              {detail.clinicalUseInsight}
-            </span>
+          {secondaryDomains.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-sans text-[11px] uppercase tracking-[0.12em] text-text-muted">
+                Also relevant to
+              </span>
+              {secondaryDomains.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex rounded-full border border-himalayan-green/12 px-3 py-1.5 font-sans text-xs text-text-muted"
+                >
+                  {BODY_SYSTEM_LABELS[tag]}
+                </span>
+              ))}
+            </div>
           ) : null}
+
+          <p className="font-sans text-sm leading-relaxed text-text-muted">
+            {evidenceTypeLabel} • {confidenceLabel}
+          </p>
         </div>
 
         <div className="space-y-3.5">
@@ -115,6 +129,17 @@ export default function StudyCard({ study, detail, featured = false }: Props) {
             </div>
           ) : null}
         </div>
+
+        {detail?.clinicalUseInsight ? (
+          <section className="space-y-2 rounded-xl border border-himalayan-green/10 bg-clinical-white px-4 py-4 md:px-5">
+            <p className="font-sans text-[11px] uppercase tracking-[0.12em] text-text-muted">
+              Clinical Interpretation
+            </p>
+            <p className="font-sans text-sm leading-[1.8] text-text-dark">
+              {detail.clinicalUseInsight}
+            </p>
+          </section>
+        ) : null}
 
         <div className="flex flex-wrap items-center gap-4 pt-0.5">
           <a

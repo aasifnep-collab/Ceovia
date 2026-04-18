@@ -10,15 +10,15 @@ export default function Hero() {
       fullHeight
       align="left"
       eyebrow="POWERED BY HIMALAYA"
-      heading="The Next Generation Cell Bioactivator"
-      description="A premium daily system powered by 190+ bioactive compounds, engineered as a clinically structured ritual to support cellular vitality, sustained energy, and whole-body balance — delivered through a refined clinical luxury approach."
+      heading="A Clinically Structured Daily Wellness System"
+      description="A premium daily system powered by Himalayan Sea Buckthorn bioactives, designed to support skin, energy, and whole-body wellness through a measured 90-day routine."
       meta={
         <>
           <p className="max-w-prose-narrow font-sans text-[0.92rem] font-normal leading-relaxed text-white/72 md:text-[1rem]">
             Derived from Himalayan Sea Buckthorn Bioactives
           </p>
           <p className="mt-4 max-w-prose-narrow font-display text-[1.35rem] leading-[1.25] tracking-[-0.015em] text-white/92 md:text-[1.55rem]">
-            Rejuvenate Body, Mind &amp; Soul — Naturally
+            Built for consistency, evidence discipline, and premium daily use
           </p>
         </>
       }

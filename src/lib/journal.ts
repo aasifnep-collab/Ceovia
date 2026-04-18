@@ -10,6 +10,7 @@ export type JournalArticle = {
   excerpt: string
   readTime: string
   publishLabel: string
+  publishDate: string  // ISO 8601 date string — used in Article JSON-LD schema
   featured?: boolean
   dek: string
   sections: JournalSection[]
@@ -26,6 +27,7 @@ export const journalArticles: JournalArticle[] = [
       'Meaningful visible change is rarely immediate. A 90-day timeframe gives physiology enough consistency to reveal what daily inputs are truly doing.',
     readTime: '6 min read',
     publishLabel: 'Editorial Brief',
+    publishDate: '2026-03-01',
     featured: true,
     dek:
       'The CEOVIA protocol is built on the idea that transformation becomes easier to observe when a ritual is structured long enough to move beyond novelty and into measurable consistency.',
@@ -71,6 +73,7 @@ export const journalArticles: JournalArticle[] = [
       'Omega-7 remains one of the least discussed essential wellness conversations in premium supplementation, yet it is central to the distinctiveness of Sea Buckthorn.',
     readTime: '5 min read',
     publishLabel: 'Bioactive Note',
+    publishDate: '2026-03-08',
     featured: true,
     dek:
       'When people think about fatty acids, they usually think of Omega-3 first. Omega-7 is different: rarer, less familiar, and closely tied to the botanical identity that makes CEOVIA unusual.',
@@ -116,6 +119,7 @@ export const journalArticles: JournalArticle[] = [
       'Surface beauty conversations often miss a deeper truth: skin reflects internal balance, recovery, nourishment, and how consistently the body is supported from within.',
     readTime: '7 min read',
     publishLabel: 'Beauty Editorial',
+    publishDate: '2026-03-15',
     featured: true,
     dek:
       'The idea of beauty from within can sound vague when it is poorly explained. In a more precise sense, it is about how the visible surface responds to the quality of internal support over time.',
@@ -161,6 +165,7 @@ export const journalArticles: JournalArticle[] = [
       'Single-ingredient supplementation can feel simple and efficient, but simplicity is not always the same as intelligence in premium wellness design.',
     readTime: '4 min read',
     publishLabel: 'Perspective',
+    publishDate: '2026-03-22',
     featured: true,
     dek:
       'The modern supplement market often rewards singularity: one molecule, one promise, one problem to solve. That model is attractive, but it can flatten the complexity of how real wellness systems work.',
@@ -206,6 +211,7 @@ export const journalArticles: JournalArticle[] = [
       'In premium wellness, source is not background information. It is part of the product itself, shaping composition, credibility, and eventual customer trust.',
     readTime: '6 min read',
     publishLabel: 'Source Report',
+    publishDate: '2026-04-01',
     featured: true,
     dek:
       'Two products can mention the same ingredient and still represent very different standards. In CEOVIA’s case, the source story is central to why the formulation deserves attention.',
@@ -251,6 +257,7 @@ export const journalArticles: JournalArticle[] = [
       'Long-term compliance is rarely built on discipline alone. Ritual creates emotional meaning, and meaning is often what helps a healthy behaviour stay consistent.',
     readTime: '5 min read',
     publishLabel: 'Ritual Note',
+    publishDate: '2026-04-08',
     featured: true,
     dek:
       'Many wellness products are consumed as tasks. CEOVIA has the opportunity to feel different: not just another item on a checklist, but part of a daily ritual with intention and identity.',

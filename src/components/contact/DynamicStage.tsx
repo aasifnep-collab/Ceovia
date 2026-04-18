@@ -13,6 +13,10 @@ type Props = {
   activeAudience: InquiryType['id'] | null
   formValues: FormValues
   onFieldChange: (fieldId: string, value: string) => void
+  submissionState: 'idle' | 'loading' | 'success' | 'error'
+  submissionMessage: string
+  onSubmissionStateChange: (value: 'idle' | 'loading' | 'success' | 'error') => void
+  onSubmissionMessageChange: (value: string) => void
 }
 
 function getStageIcon(id: InquiryType['id']) {
@@ -26,7 +30,15 @@ function getStageIcon(id: InquiryType['id']) {
   }
 }
 
-export default function DynamicStage({ activeAudience, formValues, onFieldChange }: Props) {
+export default function DynamicStage({
+  activeAudience,
+  formValues,
+  onFieldChange,
+  submissionState,
+  submissionMessage,
+  onSubmissionStateChange,
+  onSubmissionMessageChange,
+}: Props) {
   if (!activeAudience) {
     return (
       <div className="mt-10 flex min-h-[360px] items-center justify-center rounded-[30px] border border-dashed border-[#DDE4DF] bg-[#FBFCFB]/80 px-6 py-12 transition-all duration-300">
@@ -45,21 +57,58 @@ export default function DynamicStage({ activeAudience, formValues, onFieldChange
   const inquiry = getInquiryType(activeAudience)
   const StageIcon = getStageIcon(activeAudience)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const requiredFields = inquiry.fields.filter((field) => field.required)
     const hasMissingField = requiredFields.some((field) => !formValues[field.id]?.trim())
-    if (hasMissingField) return
+    if (hasMissingField) {
+      onSubmissionStateChange('error')
+      onSubmissionMessageChange('Please complete all required fields before sending.')
+      return
+    }
 
-    const subject = `${inquiry.emailSubjectPrefix}: ${formValues.subject ?? ''}`.trim()
-    const details = inquiry.fields
-      .filter((field) => field.id !== 'subject' && field.id !== 'message')
-      .map((field) => `${field.label}: ${formValues[field.id] || '—'}`)
-      .join('\n')
+    onSubmissionStateChange('loading')
+    onSubmissionMessageChange('')
 
-    const body = `${details}\n\nMessage:\n${formValues.message ?? ''}`
-    window.location.href = `mailto:info@ceovia.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          inquiryType: inquiry.id,
+          name: formValues.fullName ?? '',
+          email: formValues.email ?? '',
+          subject: `${inquiry.emailSubjectPrefix}: ${formValues.subject ?? ''}`.trim(),
+          message: formValues.message ?? '',
+          companyOrClinic:
+            formValues.companyName ??
+            formValues.clinicName ??
+            '',
+        }),
+      })
+
+      const result = (await response.json()) as { error?: string; message?: string }
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Unable to send your enquiry right now.')
+      }
+
+      onSubmissionStateChange('success')
+      onSubmissionMessageChange(
+        result.message ||
+          'Your enquiry has been received. A CEOVIA team member will reply shortly.',
+      )
+    } catch (error) {
+      onSubmissionStateChange('error')
+      onSubmissionMessageChange(
+        error instanceof Error
+          ? error.message
+          : 'Unable to send your enquiry right now. Please try again shortly.',
+      )
+    }
   }
 
   return (
@@ -84,6 +133,8 @@ export default function DynamicStage({ activeAudience, formValues, onFieldChange
           values={formValues}
           onFieldChange={onFieldChange}
           onSubmit={handleSubmit}
+          submissionState={submissionState}
+          submissionMessage={submissionMessage}
         />
       </div>
 
