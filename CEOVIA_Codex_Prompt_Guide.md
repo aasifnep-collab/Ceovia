@@ -1,7 +1,7 @@
-# CEOVIA — Claude / Codex Prompt Guide
+# CEOVIA — Codex Prompt Guide
 ## How to Build the Website in VS Code Using AI
 
-This guide tells you exactly what prompts to give Claude or Codex at each step.
+This guide tells you exactly what prompts to give Codex at each step.
 Copy the prompts. Paste them. The output will match the CEOVIA blueprint.
 
 ---
@@ -502,7 +502,7 @@ Morning Start:
 3. Open: http://localhost:3000
 
 When building a new component:
-- Prompt Claude: "Build the [ComponentName] component for CEOVIA following the 
+- Prompt Codex: "Build the [ComponentName] component for CEOVIA following the 
   design system in tailwind.config.js. Use Cormorant Garamond for display text, 
   DM Sans for body. Brand green: #1A4731. Gold accent: #C9A961. Cream background: 
   #F7F4EE. Layer 1 language only — no disease names, no mechanism claims."
