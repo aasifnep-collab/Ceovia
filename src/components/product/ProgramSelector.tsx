@@ -1,10 +1,10 @@
 'use client'
 
 /**
- * ProgramSelector — bottle-count selector and purchase CTA.
+ * ProgramSelector — live Shopify offer selector and purchase CTA.
  *
- * Variants: 1 Bottle (2-Month Supply) | 2 Bottles (4-Month Supply, best value).
- * Defaults to 2-bottles.
+ * Variants are mapped directly to real Shopify sellable offers.
+ * Defaults to the recommended 90-Day System.
  *
  * State: selectedId — drives card highlight, price row, and CTA label.
  * Fires 'ceovia:variant' custom DOM event on selection so StickyMobileCTA
@@ -19,65 +19,39 @@
 import { useState } from 'react'
 import { useAddToCart } from '@/hooks/useAddToCart'
 import { trackEvent } from '@/lib/analytics'
+import type { CeoviaOffer } from '@/lib/shopify/offers'
 
-type Variant = {
+type VariantEventDetail = {
   id: string
   label: string
-  protocolLabel: string
-  capsules: string
-  duration: string
-  price: number
-  aed: number
-  pricePerBottle: number
-  saving: string | null
-  recommended?: boolean
+  priceDisplay: string
 }
 
-const VARIANTS: Variant[] = [
-  {
-    id: '1-bottle',
-    label: '1 Bottle',
-    protocolLabel: 'Foundational Supply',
-    capsules: '120 Capsules',
-    duration: '60-Day Supply',
-    price: 150,
-    aed: 550,
-    pricePerBottle: 150,
-    saving: null,
-  },
-  {
-    id: '2-bottles',
-    label: '2 Bottles',
-    protocolLabel: 'Recommended Full-Protocol Supply',
-    capsules: '240 Capsules',
-    duration: '120-Day Supply',
-    price: 249,
-    aed: 913,
-    pricePerBottle: 125,
-    saving: 'Save AED 187 (17%)',
-    recommended: true,
-  },
-]
+type ProgramSelectorProps = {
+  offers: CeoviaOffer[]
+}
 
-export default function ProgramSelector() {
-  const [selectedId, setSelectedId] = useState<string>('2-bottles')
-  const selected = VARIANTS.find((v) => v.id === selectedId) ?? VARIANTS[1]
+export default function ProgramSelector({ offers }: ProgramSelectorProps) {
+  const [selectedId, setSelectedId] = useState<string>('90day')
+  const fallbackOffer = offers.find((offer) => offer.key === '90day') ?? offers[0]
+  const selected = offers.find((offer) => offer.key === selectedId) ?? fallbackOffer
   const { addToCart, isLoading, isSuccess, error } = useAddToCart()
   const ctaLabel =
-    selected.id === '2-bottles'
-      ? 'Start Recommended Full-Protocol Supply'
-      : 'Begin with Foundational Supply'
+    selected.key === '90day'
+      ? 'Start the 90-Day System'
+      : 'Begin the 60-Day Program'
 
-  const handleSelect = (v: Variant) => {
-    setSelectedId(v.id)
+  const handleSelect = (offer: CeoviaOffer) => {
+    setSelectedId(offer.key)
     trackEvent('program_selection', {
-      variant: v.id,
-      label: v.label,
-      duration: v.duration,
+      variant: offer.key,
+      label: offer.title,
+      price: offer.priceAmount,
+      currency: offer.priceCurrency,
     })
     window.dispatchEvent(
-      new CustomEvent('ceovia:variant', {
-        detail: { id: v.id, label: v.label, priceUSD: v.price, priceAED: v.aed },
+      new CustomEvent<VariantEventDetail>('ceovia:variant', {
+        detail: { id: offer.key, label: offer.title, priceDisplay: offer.priceDisplay },
       })
     )
   }
@@ -97,34 +71,34 @@ export default function ProgramSelector() {
             id="purchase-selector-heading"
             className="mt-3 font-display text-display-md text-[#0E5A36]"
           >
-            Choose the supply that fits your routine
+            Choose the real CEOVIA offer that fits your routine
           </h2>
           <p className="mt-4 max-w-[39rem] mx-auto font-sans text-sm leading-relaxed text-[#4A5C52] md:text-[0.98rem]">
-            Both options follow the same 2-capsule daily format. The recommended supply gives you enough continuity to complete the 90-day protocol with additional buffer for a consistent routine.
+            These options now map directly to CEOVIA&apos;s live Shopify offers, so the price you see here matches the checkout you reach.
           </p>
           <p className="mt-3 max-w-[34rem] mx-auto font-sans text-xs leading-relaxed tracking-[0.01em] text-[#0E5A36]/82 md:text-sm">
-            The recommended option is designed to align with CEOVIA&apos;s intended daily rhythm.
+            The 90-Day System remains the recommended choice if you want the full CEOVIA protocol without interruption.
           </p>
         </div>
 
         {/* Variant cards — 2-column on sm+ */}
         <div className="mx-auto mb-11 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5">
-          {VARIANTS.map((variant) => {
-            const isSelected = variant.id === selectedId
+          {offers.map((offer) => {
+            const isSelected = offer.key === selectedId
             return (
               <button
-                key={variant.id}
+                key={offer.variantId}
                 type="button"
-                onClick={() => handleSelect(variant)}
+                onClick={() => handleSelect(offer)}
                 aria-pressed={isSelected}
                 className={[
                   'relative min-h-[244px] text-left rounded-[1.35rem] p-6 transition-all duration-300 sm:min-h-[260px] md:min-h-[272px]',
                   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0A4428] focus-visible:outline-offset-2',
                   isSelected
-                    ? variant.recommended
+                    ? offer.badge
                       ? 'bg-[#F3F8F4] border border-[#0A4428]/70 shadow-[0_10px_26px_rgba(16,38,28,0.08)] ring-1 ring-inset ring-[#D4A857]/30'
                       : 'bg-[#F7FAF8] border border-[#0A4428]/55 shadow-[0_8px_22px_rgba(16,38,28,0.06)]'
-                    : variant.recommended
+                    : offer.badge
                       ? 'bg-white border border-[#D4A857]/45 hover:border-[#0A4428]/40 hover:shadow-[0_8px_24px_rgba(16,38,28,0.05)]'
                       : 'bg-white border border-[#C8D1CB]/60 hover:border-[#0A4428]/28 hover:shadow-[0_8px_22px_rgba(16,38,28,0.04)]',
                 ].join(' ')}
@@ -149,51 +123,31 @@ export default function ProgramSelector() {
                 )}
 
                 {/* Recommended badge — above label */}
-                {variant.recommended && (
+                {offer.badge && (
                   <span className="mb-4 inline-flex rounded-full border border-[#D4A857]/65 bg-[#FCF7EA] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-[#8B6914]">
-                    Recommended
+                    {offer.badge}
                   </span>
                 )}
 
                 <p className="mb-1.5 max-w-[20ch] font-sans text-[10px] font-medium uppercase leading-[1.35] tracking-[0.16em] text-[#0E5A36]">
-                  {variant.protocolLabel}
+                  {offer.summary}
                 </p>
 
-                {/* Uppercase label: "2 BOTTLES · 240 CAPSULES" */}
                 <p className="mb-2.5 font-sans text-[11px] font-medium leading-[1.35] tracking-[0.12em] uppercase text-[#4A5C52]">
-                  {variant.label.toUpperCase()} · {variant.capsules.toUpperCase()}
+                  {offer.availableForSale ? 'Available Now' : 'Currently Unavailable'}
                 </p>
 
-                {/* Duration — serif heading */}
                 <p className="mb-3 font-display text-display-sm leading-[1.04] text-[#0E5A36]">
-                  {variant.duration}
+                  {offer.title}
                 </p>
 
-                {/* Price row */}
                 <p className="font-sans text-xl font-medium text-[#2B2B2B]">
-                  ${variant.price}
-                  <span className="font-sans text-sm text-[#4A5C52] font-normal ml-2">
-                    AED {variant.aed}
-                  </span>
-                </p>
-
-                {/* Per bottle note */}
-                <p className="font-sans text-xs text-[#4A5C52] mt-0.5">
-                  ${variant.pricePerBottle} per bottle
+                  {offer.priceDisplay}
                 </p>
 
                 <p className="mt-3 max-w-[28ch] font-sans text-xs leading-[1.65] text-[#4A5C52]">
-                  {variant.id === '2-bottles'
-                    ? 'Best for protocol continuity, fewer reorder decisions, and stronger value per bottle.'
-                    : 'A concise way to begin the daily format before deciding on a longer path.'}
+                  {offer.detail}
                 </p>
-
-                {/* Saving badge — only on variants that have one */}
-                {variant.saving && (
-                  <p className="mt-3 font-sans text-xs font-medium text-[#0E5A36]">
-                    ✦ {variant.saving}
-                  </p>
-                )}
 
               </button>
             )
@@ -206,8 +160,8 @@ export default function ProgramSelector() {
           {/* Primary Add to Cart */}
           <button
             type="button"
-            disabled={isLoading || isSuccess}
-            onClick={() => void addToCart(selected.id)}
+            disabled={isLoading || isSuccess || !selected.availableForSale}
+            onClick={() => void addToCart(selected.key)}
             className={[
               'w-full rounded-full py-[1.1rem] font-sans text-[1rem] font-medium tracking-[0.01em] transition-all duration-200',
               'focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0E5A36] focus-visible:outline-offset-2',
@@ -215,6 +169,8 @@ export default function ProgramSelector() {
                 ? 'bg-[#0E5A36] text-white opacity-70 cursor-not-allowed'
                 : isSuccess
                 ? 'bg-[#0A4428] text-white'
+                : !selected.availableForSale
+                ? 'bg-[#C8D1CB] text-white cursor-not-allowed'
                 : 'bg-[#0E5A36] text-white hover:bg-[#0A4428]',
             ].join(' ')}
           >
@@ -222,6 +178,8 @@ export default function ProgramSelector() {
               ? 'Adding...'
               : isSuccess
               ? 'Added ✓'
+              : !selected.availableForSale
+              ? 'Currently unavailable'
               : `${ctaLabel} →`}
           </button>
 

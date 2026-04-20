@@ -5,8 +5,7 @@
  *
  * Flow:
  *   1. Look up Shopify variant GID from CEOVIA_VARIANT_GIDS
- *   2. If GID is a TODO placeholder: surface a user-safe error, do not call Shopify
- *   3. Call createCheckout (or createSubscriptionCheckout for subscription variant)
+ *   2. Call createCheckout (or createSubscriptionCheckout for subscription variant)
  *   4. Set isSuccess for 1500ms, then redirect to webUrl via window.location.href
  *   5. On failure: set user-safe error message, clear after 3000ms
  *
@@ -43,16 +42,6 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 const ERROR_DISPLAY_MS   = 3000
 const SUCCESS_REDIRECT_MS = 1500
-const PROGRAM_QUANTITY_MAP: Record<string, number> = {
-  '1-bottle': 1,
-  '2-bottles': 2,
-  '3-bottles': 3,
-  // Legacy
-  '30day': 1,
-  '60day': 2,
-  '90day': 3,
-}
-
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface UseAddToCartReturn {
@@ -89,8 +78,7 @@ export function useAddToCart(): UseAddToCartReturn {
 
     const gid = CEOVIA_VARIANT_GIDS[variantKey]
 
-    // Guard: GID not yet configured (TODO placeholder still in place)
-    if (!gid || gid.startsWith('TODO:')) {
+    if (!gid) {
       console.error('Shopify variant GID not configured for:', variantKey)
       setError(GID_NOT_CONFIGURED_ERROR)
       scheduleTimeout(() => setError(null), ERROR_DISPLAY_MS)
@@ -106,8 +94,7 @@ export function useAddToCart(): UseAddToCartReturn {
       if (variantKey === 'subscription') {
         checkoutUrl = await createSubscriptionCheckout(gid, CEOVIA_SELLING_PLAN_ID)
       } else {
-        const quantity = PROGRAM_QUANTITY_MAP[variantKey] || 1
-        checkoutUrl = await createCheckout(gid, quantity)
+        checkoutUrl = await createCheckout(gid, 1)
       }
 
       setIsSuccess(true)

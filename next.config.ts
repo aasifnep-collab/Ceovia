@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
 const SECURITY_HEADERS = [
   {
     key: 'X-Frame-Options',
@@ -27,9 +29,10 @@ const SECURITY_HEADERS = [
       "font-src 'self' https://fonts.gstatic.com data:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       // GTM container + GA4 script tags; Meta Pixel is loaded via GTM tag manager UI
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
-      // GA4 measurement + GTM preview; Shopify checkout; Meta Pixel events (when enabled via GTM)
-      "connect-src 'self' https://*.myshopify.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.facebook.com",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com https://www.google-analytics.com`,
+      // GA4 measurement + GTM preview; Shopify checkout; Meta Pixel events (when enabled via GTM).
+      // Next.js dev also needs websocket access for Fast Refresh/HMR.
+      `connect-src 'self'${isDev ? ' ws: wss:' : ''} https://*.myshopify.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.facebook.com`,
       "form-action 'self'",
       'upgrade-insecure-requests',
     ].join('; '),

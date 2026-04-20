@@ -32,6 +32,7 @@ import CtaBanner        from '@/components/sections/CtaBanner'
 import Link             from 'next/link'
 import JsonLd           from '@/components/seo/JsonLd'
 import { buildPageMetadata, getCanonicalUrl } from '@/lib/metadata'
+import { getCeoviaOffers } from '@/lib/shopify/offers'
 
 // ── Page metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = buildPageMetadata({
@@ -87,15 +88,15 @@ const faqItems: AccordionItem[] = [
   },
   {
     q: 'What is included in each bottle?',
-    a: 'Each bottle contains 120 capsules, which covers 60 days at the recommended 2-capsule daily serving.',
+    a: 'CEOVIA is currently offered as a 60-Day Program and a 90-Day System. Select the option that matches the routine you want to follow at checkout.',
   },
   {
     q: 'Which option is best if I want to follow the full protocol?',
-    a: 'The 2-bottle option is the recommended path if you want enough supply to complete the 90-day protocol with continuity and without an early reorder.',
+    a: 'The 90-Day System is the recommended path if you want the full CEOVIA protocol in one uninterrupted purchase.',
   },
   {
     q: 'When should I reorder?',
-    a: 'If you begin with one bottle, most customers choose to reorder before the final week so their daily routine is not interrupted.',
+    a: 'If you begin with the 60-Day Program, reorder before your final week so your routine is not interrupted.',
   },
   {
     q: 'Can I take CEOVIA with other supplements?',
@@ -125,11 +126,14 @@ const trustItems = [
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
-export default function ProductPage() {
+export default async function ProductPage() {
+  const offers = await getCeoviaOffers()
+  const recommendedOffer = offers.find((offer) => offer.key === '90day') ?? offers[0]
+
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: 'CEOVIA 90-Day Wellness System',
+    name: 'CEOVIA Softgel Capsules',
     description:
       'A structured daily supplement powered by Himalayan Sea Buckthorn seed oil to support skin, energy, and whole-body wellness.',
     image: [getCanonicalUrl('/images/ceovia-bottle.png')],
@@ -138,22 +142,17 @@ export default function ProductPage() {
       name: 'CEOVIA',
     },
     sku: 'ceovia-90-day-system',
-    offers: [
-      {
-        '@type': 'Offer',
-        priceCurrency: 'USD',
-        price: '150',
-        availability: 'https://schema.org/InStock',
-        url: getCanonicalUrl('/products/ceovia-90-day'),
-      },
-      {
-        '@type': 'Offer',
-        priceCurrency: 'USD',
-        price: '249',
-        availability: 'https://schema.org/InStock',
-        url: getCanonicalUrl('/products/ceovia-90-day'),
-      },
-    ],
+    offers: offers.map((offer) => ({
+      '@type': 'Offer',
+      sku: offer.variantId,
+      name: offer.title,
+      priceCurrency: offer.priceCurrency,
+      price: offer.priceAmount.toString(),
+      availability: offer.availableForSale
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      url: getCanonicalUrl('/products/ceovia-90-day'),
+    })),
   }
 
   const faqSchema = {
@@ -177,7 +176,7 @@ export default function ProductPage() {
       <ProductHero />
 
       {/* ── 2. Variant Selector + Pricing ────────────────────────── */}
-      <ProgramSelector />
+      <ProgramSelector offers={offers} />
 
       {/* ── 3. Formulation ────────────────────────────────────────── */}
       <section
@@ -356,7 +355,7 @@ export default function ProductPage() {
       <CtaBanner />
 
       {/* ── Sticky mobile CTA — mobile only, synced with ProgramSelector ── */}
-      <StickyMobileCTA />
+      <StickyMobileCTA initialOffer={recommendedOffer} />
 
       {/* ── Mandatory disclaimer — must sit above Footer ──────────── */}
       <DisclaimerBlock text="CEOVIA is a food supplement. It is not intended to diagnose, treat, cure, or prevent any disease. Results may vary. Consult a healthcare professional before use if pregnant, nursing, or taking medication." />

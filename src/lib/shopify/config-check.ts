@@ -1,9 +1,6 @@
 import { CEOVIA_VARIANT_GIDS } from './variants'
 
 const VARIANT_KEYS = [
-  '1-bottle',
-  '2-bottles',
-  '3-bottles',
   '30day',
   '60day',
   '90day',

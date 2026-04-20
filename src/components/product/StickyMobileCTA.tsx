@@ -7,9 +7,9 @@
  * Becomes visible after 200px scroll; hides when within 200px of the
  * page bottom (to avoid overlapping DisclaimerBlock / Footer).
  *
- * Syncs the selected variant from ProgramSelector via the
+ * Syncs the selected offer from ProgramSelector via the
  * 'ceovia:variant' custom DOM event. Defaults to the
- * 2-bottle selection — matches ProgramSelector's initial state,
+ * recommended 90-Day System offer passed from the server,
  * so the display is always correct without an initial handshake.
  *
  * Cart: uses useAddToCart hook — identical logic to ProgramSelector.
@@ -22,30 +22,28 @@
 
 import { useState, useEffect } from 'react'
 import { useAddToCart } from '@/hooks/useAddToCart'
+import type { CeoviaOffer } from '@/lib/shopify/offers'
 
 type VariantInfo = {
   id: string
   label: string
-  priceUSD: number
-  priceAED: number
+  priceDisplay: string
 }
 
-// Must match ProgramSelector's default selectedId = '2-bottles'
-const DEFAULT_VARIANT: VariantInfo = {
-  id: '2-bottles',
-  label: '2 Bottles',
-  priceUSD: 249,
-  priceAED: 913,
+type StickyMobileCTAProps = {
+  initialOffer: CeoviaOffer
 }
 
-export default function StickyMobileCTA() {
+export default function StickyMobileCTA({ initialOffer }: StickyMobileCTAProps) {
   const [visible, setVisible] = useState(false)
-  const [variant, setVariant] = useState<VariantInfo>(DEFAULT_VARIANT)
+  const [variant, setVariant] = useState<VariantInfo>({
+    id: initialOffer.key,
+    label: initialOffer.title,
+    priceDisplay: initialOffer.priceDisplay,
+  })
   const { addToCart, isLoading, isSuccess, error } = useAddToCart()
   const ctaLabel =
-    variant.id === '2-bottles'
-      ? 'Start Full Protocol'
-      : 'Begin Supply'
+    variant.id === '90day' ? 'Start 90-Day System' : 'Begin 60-Day Program'
 
   // ── Show / hide based on scroll position ────────────────────────
   useEffect(() => {
@@ -100,8 +98,7 @@ export default function StickyMobileCTA() {
             {variant.label}
           </p>
           <p className="mt-0.5 font-sans text-xs text-[#4A5C52]">
-            ${variant.priceUSD}
-            <span className="ml-1">· AED {variant.priceAED}</span>
+            {variant.priceDisplay}
           </p>
         </div>
 
